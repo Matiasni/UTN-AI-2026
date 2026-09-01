@@ -1,7 +1,7 @@
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
 
-public class SteeringFinalExample : Agent
+public class AdvanceAgent : Agent
 {
     [Header("Stats")]
     [SerializeField] private float _maxSpeed = 3f;
@@ -9,24 +9,27 @@ public class SteeringFinalExample : Agent
     [SerializeField] private float _slowingDistance = 3f;
     [SerializeField] private float _minDistance = 0.1f;
 
+    private static List<Agent> allAgents = new List<Agent>();
+    [SerializeField] private float _separationRadius = 2f;
+    [SerializeField] private float _cohesionRadius = 2f;
+    [SerializeField] private float _alignmentRadius = 2f;
+
+    [SerializeField, Range(0f, 1f)] private float separationWeight = 1f;
+    [SerializeField, Range(0f, 1f)] private float cohesionWeight = 1f;
+    [SerializeField, Range(0f, 1f)] private float alignmentWeight = 1f;
+
     [Header("References")]
     [SerializeField] private Agent _target;
 
-    public static List<Agent> tempAg = new List<Agent>();
-
-    [SerializeField, Range(0, 3f)] private float separationWeight = 1;
-    [SerializeField, Range(0, 3f)] private float cohesionWeight = 1;
-    [SerializeField, Range(0, 3f)] private float alignmentWeight = 1;
+    public enum SteeringModes { Seek, Flee, Arrive, Pursuit, Evade, Flocking }
+    public SteeringModes currentSteering;
 
     private void Awake()
     {
-        tempAg.Add(this);
-        Vector3 randomVector = new(Random.Range(-1, 1), 0f, Random.Range(-1, 1));
-        _velocity += randomVector.normalized * _maxSpeed;
+        allAgents.Add(this);
+        Vector3 randomDirection = new Vector3(Random.Range(-1, 1), 0f, Random.Range(-1, 1));
+        _velocity += randomDirection.normalized * _maxSpeed;
     }
-
-    public enum SteeringModes { Seek, Flee, Arrive, Pursuit, Evade, Flocking }
-    public SteeringModes currentSteering;
 
     private void Update()
     {
@@ -35,7 +38,9 @@ public class SteeringFinalExample : Agent
 
         if (_velocity != Vector3.zero)
             transform.forward = _velocity;
-    }
+
+        transform.position = Bounds.Instance.OutOfBounds(transform.position);
+    }    
 
     private Vector3 SteeringVector()
     {
@@ -60,79 +65,79 @@ public class SteeringFinalExample : Agent
 
     private Vector3 Flocking()
     {
-        return CalculateSeparation(tempAg, 4) * separationWeight + CalculateAlignment(tempAg, 10) * alignmentWeight + CalculateCohesion(tempAg, 10) * cohesionWeight;
+        return CalculateSeparation(allAgents, _separationRadius) * separationWeight 
+                + CalculateAlignment(allAgents, _alignmentRadius) * alignmentWeight 
+                + CalculateCohesion(allAgents, _cohesionRadius) * cohesionWeight;
     }
 
-    private Vector3 CalculateSeparation(IEnumerable<Agent> agents, float separation)
+    private Vector3 CalculateSeparation(IEnumerable<Agent> list, float radius)
+    {
+        Vector3 dessired = default;
+        int count = 0;
+
+        foreach (var item in list)
+        {
+            if (item == this) continue;
+
+            if (InRange(item.transform.position, radius))
+            {
+                dessired += (item.transform.position - transform.position);
+                count++;
+            }
+        }
+
+        if(count == 0) return Vector3.zero;
+        dessired /= count;
+
+        return CalculateSteering(-dessired.normalized * _maxSpeed);
+    }
+
+    private Vector3 CalculateAlignment(IEnumerable<Agent> list, float radius)
     {
         Vector3 desired = default;
         int count = 0;
 
-        foreach (Agent agent in agents)
+        foreach (var item in list)
         {
-            if (agent == this) continue;
+            if (item == this) continue;
 
-            if (InRange(agent.transform.position, separation))
+            if (InRange(item.transform.position, radius))
             {
-                desired += (agent.transform.position - transform.position);
+                desired += item.Velocity;
                 count++;
             }
         }
 
         if (count == 0) return Vector3.zero;
-
-        desired /= count;
-
-        return CalculateSteering(-desired.normalized * _maxSpeed);
-    }
-
-    private Vector3 CalculateAlignment(IEnumerable<Agent> agents, float separation)
-    {
-        Vector3 desired = default;
-        int count = 0;
-
-        foreach (Agent agent in agents)
-        {
-            if (agent == this) continue;
-
-            if (InRange(agent.transform.position, separation))
-            {
-                desired += (agent.Velocity);
-                count++;
-            }
-        }
-
-        if (count == 0) return Vector3.zero;
-
         desired /= count;
 
         return CalculateSteering(desired.normalized * _maxSpeed);
     }
 
-    private Vector3 CalculateCohesion(IEnumerable<Agent> agents, float separation)
+    private Vector3 CalculateCohesion(IEnumerable<Agent> list, float radius)
     {
         Vector3 desired = default;
         int count = 0;
 
-        foreach (Agent agent in agents)
+        foreach (var item in list)
         {
-            if (agent == this) continue;
+            if (item == this) continue;
 
-            if (InRange(agent.transform.position, separation))
+            if (InRange(item.transform.position, radius))
             {
-                desired += (agent.transform.position);
+                desired += item.transform.position;
                 count++;
             }
         }
 
         if (count == 0) return Vector3.zero;
-
         desired /= count;
 
         return Seek(desired);
     }
 
-    private bool InRange(Vector3 pos, float radious) => (pos - transform.position).sqrMagnitude <= radious * radious;
+    private bool InRange(Vector3 pos, float radius) => (pos - transform.position).sqrMagnitude <= radius * radius;
+     
 
     private Vector3 CalculateSteering(Vector3 desired)
     {
