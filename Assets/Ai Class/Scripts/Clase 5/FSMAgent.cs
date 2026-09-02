@@ -13,7 +13,6 @@ public class FSMAgent : MonoBehaviour
     [SerializeField] private PatrolData dataPatrol;
 
     private StateMachine _stateMachine;
-    private StateMachine _stateMachineTwo;
 
     private void Awake()
     {

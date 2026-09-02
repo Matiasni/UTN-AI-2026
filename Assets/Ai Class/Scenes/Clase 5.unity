@@ -1058,6 +1058,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 137e7f150efa7ae428119b962e640be6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FSMAgent
+  speed: 50
+  dataPatrol:
+    wayPoints:
+    - {fileID: 496142604}
+    - {fileID: 1990486116}
+    - {fileID: 1240867437}
+    - {fileID: 645600565}
+    transform: {fileID: 6138104450263328142}
+    waypointCheckDistance: 0.1
+--- !u!4 &6138104450263328142 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8629334253477327430, guid: a1bfb2a6fe5dfbd4c9060f48813519a5, type: 3}
+  m_PrefabInstance: {fileID: 6138104450263328139}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
