@@ -124,7 +124,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8629334253477327430}
-  - component: {fileID: 5797028385659666926}
   m_Layer: 0
   m_Name: Agent
   m_TagString: Untagged
@@ -148,23 +147,6 @@ Transform:
   - {fileID: 7372262665806756562}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5797028385659666926
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6808588807104292656}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f02da5195a59bf48b4d45009f75c4b0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::IntermediateAgentSteering
-  _maxSpeed: 3
-  _maxSteering: 3
-  _slowingDistance: 3
-  _minDistance: 0.1
-  _target: {fileID: 0}
 --- !u!1 &8019107176886724285
 GameObject:
   m_ObjectHideFlags: 0

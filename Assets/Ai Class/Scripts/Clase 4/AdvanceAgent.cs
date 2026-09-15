@@ -137,7 +137,6 @@ public class AdvanceAgent : Agent
     }
 
     private bool InRange(Vector3 pos, float radius) => (pos - transform.position).sqrMagnitude <= radius * radius;
-     
 
     private Vector3 CalculateSteering(Vector3 desired)
     {
