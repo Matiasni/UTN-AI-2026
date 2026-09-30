@@ -160,7 +160,7 @@ GameObject:
   - component: {fileID: 792334529}
   - component: {fileID: 774866899}
   m_Layer: 0
-  m_Name: PathfindVisualizer
+  m_Name: Pathfinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -457,7 +457,7 @@ GameObject:
   - component: {fileID: 145504284}
   - component: {fileID: 822580588}
   m_Layer: 0
-  m_Name: Graph
+  m_Name: GridGraph
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -476,7 +476,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _graph: {fileID: 822580588}
-  _stepDelay: 0.5
+  _algorithm: 0
+  _stepDelay: 0.1
 --- !u!4 &792334529
 Transform:
   m_ObjectHideFlags: 0
@@ -507,7 +508,7 @@ MonoBehaviour:
   _gridWidth: 10
   _gridHeight: 10
   _nodeOffset: 1
-  _nodePrefab: {fileID: 2222743964131087019, guid: 01d6795ea44949acbfe335da3ab965f0, type: 3}
+  _nodePrefab: {fileID: 2619397252718767619, guid: 01d6795ea44949acbfe335da3ab965f0, type: 3}
 --- !u!1 &848708397
 GameObject:
   m_ObjectHideFlags: 0
